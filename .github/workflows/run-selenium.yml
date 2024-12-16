@@ -1,0 +1,35 @@
+name: Run Selenium Script on GitHub Actions
+
+on:
+  push:
+    branches:
+      - main  # Chạy khi có sự kiện push lên nhánh main
+  workflow_dispatch:  # Cho phép chạy thủ công từ GitHub UI
+
+jobs:
+  selenium:
+    runs-on: ubuntu-latest  # Chạy trên Ubuntu
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Cài đặt các công cụ cần thiết (Chromium và ChromeDriver)
+    - name: Set up Chromium and ChromeDriver
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y chromium-browser chromium-chromedriver
+        sudo apt-get install -y python3-pip
+
+    # Cài đặt các thư viện từ requirements.txt
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip3 install -r requirements.txt
+
+    # Chạy mã Python với Selenium
+    - name: Run Selenium script
+      run: |
+        python3 script.py
+      env:
+        DISPLAY: :99  # Đặt biến môi trường cho Selenium chạy headless
