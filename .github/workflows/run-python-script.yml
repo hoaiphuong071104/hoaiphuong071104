@@ -1,0 +1,31 @@
+name: Run Python Script
+
+on:
+  push:
+    branches:
+      - main  # Chạy khi có sự kiện push lên nhánh main
+  schedule:
+    - cron: '0 6 * * *'  # Lịch chạy tự động vào lúc 6h sáng UTC mỗi ngày
+  workflow_dispatch:  # Cho phép chạy thủ công từ giao diện GitHub
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest  # Chạy trên máy chủ Ubuntu của GitHub Actions
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Lấy mã nguồn của repository về
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Cài đặt Python version 3.x
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Cài các thư viện cần thiết từ requirements.txt (nếu có)
+
+      - name: Run the Python script
+        run: |
+          python script.py  # Chạy file Python của bạn
